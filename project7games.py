@@ -1,42 +1,111 @@
 import sys
+import random
 
 #A dictionary used to keep track of users discovered endings
 endings = {"good end" : 0, "evil end" : 0, "died" : 0, "secret end" : 0}
+rpsScore = {"win": 0, "loss": 0, "tie": 0}
 
-#Main menu, access the three different games
+#Main menu, access the three different games and display extras
 def menu():
     choice = 0
-    while choice < 1 or choice > 4:
+    while choice < 1 or choice > 6:
         print("""
         1. Text Adventure
         2. Dice
         3. Rock Paper Scissor
-        4. Exit
+        4. Display Text Adventure endings
+        5. Display Rock Paper Scissor score
+        6. Exit
         """)
         try:
+            #match/case menu for user to select, each case leads to the function for a game or display
             choice = int(input("Enter your selection: "))
             match choice:
                 case 1:
-                    selectPath() #Begins text adventure game, all paths in game lead back to the menu through gameOver function defined below
+                    startPath()
                 case 2:
                     #function, remove break
                     break
                 case 3:
-                    #function, remove break
-                    break
+                    rockPaperScissor()
                 case 4:
+                    printEndings()
+                case 5:
+                    printRpsScore()
+                case 6:
                     sys.exit("Goodbye.")
                 case _: #default case, if user inputs any integer other than 1, 2, 3 or 4
                     print("Please make a valid selection")
         except ValueError: #Catches invalid user input, if user did not enter an integer
             print("Please enter a number.")
 
+def rockPaperScissor():
+    #Game: Rock, Paper, Scissors
+    possible_actions = ("rock", "paper", "scissors")
+
+    #User will input selection
+    user_action = input("Enter a choice (rock, paper, scissors): ")
+    user_action = user_action.lower()
+    computer_action = random.choice(possible_actions)
+
+    print(f"\nYou chose {user_action}, computer chose {computer_action}.\n")
+
+    #User versus computer; outcome is printed and result is tracked
+    if user_action == computer_action:
+        print(f"Both players selected {user_action}. It's a tie!")
+        rpsTie()
+    elif user_action == "rock":
+        if computer_action == "scissors":
+            print("Rock smashes scissors! You win!")
+            rpsWin()
+        else:
+            print("Paper covers rock! You lose.")
+            rpsLoss()
+    elif user_action == "paper":
+        if computer_action == "rock":
+            print("Paper covers rock! You win!")
+            rpsWin()
+        else:
+            print("Scissors cuts paper! You lose.")
+            rpsLoss()
+    elif user_action == "scissors":
+        if computer_action == "paper":
+            print("Scissors cuts paper! You win!")
+            rpsWin()
+        else:
+            print("Rock smashes scissors! You lose.")
+            rpsLoss()
+    else:
+        print("Invalid entry, try again!")
+
+    #Return to menu once game is finished
+    gameOver()
+
+
+#Three functions to update the rps score
+def rpsWin():
+    rpsScore["win"] += 1
+
+def rpsLoss():
+    rpsScore["loss"] += 1
+
+def rpsTie():
+    rpsScore["tie"] += 1
+
+
+#Print rock paper scissor score
+def printRpsScore():
+    for win, result in rpsScore.items():
+        print(win, ":", result, end=" ")
+    print()
+    menu()
+
 #Yes or no function that validates user input to return a y or n
 def yesOrNo():
     choice = input("Please enter y for yes or n for no")
 
     while True:
-        if choice.lower is "y" or "n":
+        if choice.lower == "y" or "n":
             return choice
         print("Invalid input, try again")
         
@@ -55,16 +124,21 @@ def selectPath():
         except ValueError:
             print("Please enter an integer")
 
+
 #Returns players to the main menu after completing a game
 def gameOver():
     print("Game over, press enter to return to menu")
     input()
     menu()
 
+
 #At the end of each ending, function prints the current endings achieved looping through the dictionary
 def printEndings():
-    for ends, amounts in endings:
-        print(ends, amounts, end=" ")
+    for ends, amounts in endings.items():
+        print(ends, ":", amounts, end=" ")
+    print()
+    menu()
+
 
 #Checks the type of ending the player achieved
 def adventureResult(end):
@@ -74,12 +148,14 @@ def adventureResult(end):
         print("Congratulations you found a secret end")
         endings["secret end"] += 1
 
+
 #Tracks character deaths
 def adventurerDied():
     endings["died"] += 1
 
+
 #Function for players to select which initial path they will choose
-def selectPath():
+def startPath():
     print("""
         Heroes distinguish themselves through their primary attribute, namely: Strength, Intelligence and Charisma.
         What do you covet young adventurer? The decisions you make will alter the destiny that awaits you.
@@ -97,6 +173,7 @@ def selectPath():
                 break
             case _: #Default case, if the user does not input one of the three strings or makes a spelling error when doing so
                 print("Please check your spelling or make a valid selection.")
+
 
 #Holds all of the strength path choices
 def strengthPath():
@@ -281,5 +358,5 @@ def strengthPath():
                 """)
 
 
-
+menu()
         
