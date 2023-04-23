@@ -3,6 +3,7 @@ import random
 
 #A dictionary used to keep track of users discovered endings
 endings = {"good end" : 0, "evil end" : 0, "died" : 0, "secret end" : 0}
+#A dictionary used to keep track of players score in the rock paper scissor game
 rpsScore = {"win": 0, "loss": 0, "tie": 0}
 
 #Main menu, access the three different games and display extras
@@ -99,15 +100,6 @@ def printRpsScore():
         print(win, ":", result, end=" ")
     print()
     menu()
-
-#Yes or no function that validates user input to return a y or n
-def yesOrNo():
-    choice = input("Please enter y for yes or n for no")
-
-    while True:
-        if choice.lower == "y" or "n":
-            return choice
-        print("Invalid input, try again")
         
 
 #Function for players to choose option 1 or 2 during text adventure
@@ -115,9 +107,9 @@ def selectPath():
     while True:
         #Validates user input by throwing a value error exception in the event that the user enters a non integer as an input
         try:
-            choice = int(input("To select the first option enter 1, to select the second option enter 2. Choose wisely"))
+            choice = int(input("To select the first option enter 1, to select the second option enter 2. Choose wisely\n"))
             match choice:
-                case 1, 2:
+                case 1 | 2:
                     return choice
                 case _: #default case, if user inputs any integer other than 1 or 2
                     print("Please make a valid selection")
@@ -148,6 +140,9 @@ def adventureResult(end):
         print("Congratulations you found a secret end")
         endings["secret end"] += 1
 
+    input("Press enter to return to the main menu")
+    menu()
+
 
 #Tracks character deaths
 def adventurerDied():
@@ -159,18 +154,18 @@ def startPath():
     print("""
         Heroes distinguish themselves through their primary attribute, namely: Strength, Intelligence and Charisma.
         What do you covet young adventurer? The decisions you make will alter the destiny that awaits you.
-        (Please enter strength, or charisma to begin your adventure. Intelligence will be available in a future update)
+        (Please enter strength to begin your adventure. Intelligence and charisma will be available in a future update)
         """)
     #Loops until player makes a valid choice, either strength or charisma
     while True:
         pathSelection = input()
-        match pathSelection.lower:
+        match pathSelection.lower():
             case "strength":
                 strengthPath()
             case "intelligence":
                 print("Intelligence is currently unavailable, please make another selection.")
             case "charisma":
-                break
+                print("Charisma is currently unavailable, please make another selection.")
             case _: #Default case, if the user does not input one of the three strings or makes a spelling error when doing so
                 print("Please check your spelling or make a valid selection.")
 
@@ -338,6 +333,7 @@ def strengthPath():
             there is nothing better than job stability and a salary... right?
             """)
             gameOver()
+
         #Player chose to help out his fellow man right away
         else:
             print("""
@@ -352,10 +348,48 @@ def strengthPath():
             """)
             choiceHelpElderly = selectPath()
             
+            #Player chose to look for the treasure in the crypt
             if choiceHelpElderly == 1:
                 print("""
-                
+                You find yourself a few hours outside of town, a crypt entrance set against the face of a nearby rock. Before you can get closer
+                a shadowy figure steps out of the entrance, stops and looks over at you. "If you are here for the treasure I have not taken
+                it, you are free to take it for yourself so long as you do not stand in my way." The figure appraises you once more and begins
+                walking towards the city you came from, giving a sickengly evil aura. The persons intentions are pretty clear to you, if you let
+                the creature pass they will bring death and destruction to the town. If you choose to stand in their way you might be able to stop
+                them but you will not leave the battle alive. Do you want to risk your life to potentially save thousands or would you rather not
+                put your neck on the line?
                 """)
+                choiceCrypt = selectPath()
+                
+                #Player chose to sacrifice themselves for the greater good
+                if choiceCrypt == 1:
+                    print("""
+                    The battle is not even, and still you fight with everything ounce of your strength while carrying the fates of thousands of people
+                    on your back. As the pain and wounds become too much you feel yourself slipping, with one last push you manage to land a final strike
+                    on the creature. It wails its death cry as both you and it perish by the foot of the entrance to the crypt.
+                    """)
+                    adventurerDied()
+                    adventureResult("good end")
+
+                #Player chose to stand aside and look for their treasure
+                else:
+                    print("""
+                    You warily watch the creature head towards the town, once it is out of view you head inside the crypt and find your way down to the lower
+                    chambers where you find a plethora of gold and jewels as well as a few silver weapons. After packing up all the treasure you head back up
+                    only to find a large cloud of smoke in the sky a few miles away from you in the direction of the town. You wonder if you made the right 
+                    decision. The only thing necessary for the triumph of evil is for good men to do nothing.
+                    """)
+                    adventureResult("evil end")
+
+            #Player chose to get himself a slightly dangerous job as a bodyguard
+            else:
+                print("""
+                Life had it's ups and downs for you, like most jobs you have good days and you have bad days. Only problem is that being a bodyguard makes
+                the bad days alot more painful, but all in all you come out alive into an early retirement and unfortunately no adventurous life. You 
+                spend most days trading stories with other retired bodyguards in the area and attending parties because of the connections you made 
+                in your life.
+                """)
+                gameOver()
 
 
 menu()
