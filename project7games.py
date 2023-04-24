@@ -34,7 +34,7 @@ def menu():
                     printRpsScore()
                 case 6:
                     sys.exit()
-                case _: #default case, if user inputs any integer other than 1, 2, 3 or 4
+                case _: #default case, if user inputs any integer other than 1, 2, 3, 4, 5 or 6
                     print("Please make a valid selection")
         except ValueError: #Catches invalid user input, if user did not enter an integer
             print("Please enter a number.")
