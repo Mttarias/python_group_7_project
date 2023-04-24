@@ -25,8 +25,7 @@ def menu():
                 case 1:
                     startPath()
                 case 2:
-                    #function, remove break
-                    break
+                    diceGame()
                 case 3:
                     rockPaperScissor()
                 case 4:
@@ -34,11 +33,49 @@ def menu():
                 case 5:
                     printRpsScore()
                 case 6:
-                    sys.exit("Goodbye.")
+                    sys.exit()
                 case _: #default case, if user inputs any integer other than 1, 2, 3 or 4
                     print("Please make a valid selection")
         except ValueError: #Catches invalid user input, if user did not enter an integer
             print("Please enter a number.")
+
+def diceGame():
+    # Initialise player scores to 0
+    diceScores = {"Player 1 Wins": 0, "Player 2 Wins": 0, "Ties": 0}
+    p1Wins = "Player 1 Wins"
+    p2Wins = "Player 2 Wins"
+
+    #Repeat everything in this block 12 times
+    for i in range (12) :
+
+        # Generate random numbers between 1 and 6 for each player.
+        player1_value= random.randint(1,6)
+        player2_value = random.randint(1,6)
+
+        #Display the values
+        print("Player 1 rolled: ", player1_value)
+        print("Player 2 rolled: ", player2_value)
+
+        # Pick: take the appropriate path through the code and base them on the comparison of the values.
+        if player1_value > player2_value:
+            print(p1Wins)
+            diceScores[p1Wins] += 1
+        elif player2_value > player1_value:
+            print(p2Wins)
+            diceScores[p2Wins] += 1
+        else: 
+            print("It's a tie")
+            diceScores["Ties"] += 1
+
+        input("Press enter to continue.") # Wait for user input to proceed.
+
+    #Print scores
+    for player, wins in diceScores.items():
+        print(player, ":", wins, end=" ")
+    
+    #return to menu
+    gameOver()
+
 
 def rockPaperScissor():
     #Game: Rock, Paper, Scissors
